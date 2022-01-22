@@ -47,13 +47,32 @@ Rather than build your own you could use a Django app. And simply install it int
     - `"tests.py"` - 
     - `"views.py"` - it's used to render some sort of an interface that allows our users to interact with the to-do items
 
-### create a view
+## Create a view
 
 - in `"views.py"`, define a simple python function: `"say_hello()"`
 - in `"urls.py"`, import `"say_hello()"` function
 - define the url that's actually going to trigger the say hello function and return the http response to the browser: add `"path('hello/', say_hello, name='hello')"` to `"urlpatterns"`
 - run server to see results: `python3 manage.py runserver`
 - manually add `"/hello"` to the url in the address bar to see the results
+
+---
+
+## Create a template
+
+- in the `"todo"` folder, create a new folder called `"templates"`
+- in the `"templates"` folder, create a new folder called `"todo"`
+- in the new `"todo"` folder, create a new file called `"todo_list.html"`
+- `"todo_list.html"` will act as first template
+- generate html boilerplate for `"todo_list.html"` including a h1 tag, "Things I need to do:"
+- update `"say_hello()"` function with `"render"` function in `"views.py"`
+    - the `"render"` function takes an HTTP request and a template name as it's two arguments and it returns an HTTP response which renders that template
+- rename `"say_hello()"` with `"get_todo_list()"`
+- in `"urls.py"`, replace the `"say_hello"` path and update imports
+- add our `"todo"` app in `"settings.py"` file in `"INSTALLED_APPS"`
+
+*__Important__*
+- The reason that we're creating this  secondary todo folder inside the templates directory is because when Django looks for templates inside of these apps it will always return the first one that it finds. 
+- So by separating it into a folder that matches its app name, we can ensure that we're getting the right template even if there's another template of the same name in a different app.
 
 ---
 
