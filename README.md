@@ -71,7 +71,7 @@ Rather than build your own you could use a Django app. And simply install it int
 - add our `"todo"` app in `"settings.py"` file in `"INSTALLED_APPS"`
 
 *__Important__*
-- The reason that we're creating this  secondary todo folder inside the templates directory is because when Django looks for templates inside of these apps it will always return the first one that it finds. 
+- The reason that we're creating this  secondary "todo" folder inside the "templates" directory is because when Django looks for templates inside of these apps it will always return the first one that it finds. 
 - So by separating it into a folder that matches its app name, we can ensure that we're getting the right template even if there's another template of the same name in a different app.
 
 ---
@@ -98,6 +98,54 @@ One of the most powerful parts of Django is the *__automatic admin interface__*.
 - `"python3 manage.py runserver"` - run the server
 - add __"/admin/"__ to the url
 - __"login"__ to see the authentication and authorization app that's been created and the two tables users and group that have been created inside that app
+
+---
+
+## Create a model
+
+A Django model is the built-in feature that Django uses to create tables, their fields, and various constraints. Django models simplify tasks and organize tables into models. Django models are used to store data in the database conveniently.
+
+### Create a class
+- in `"todo/models.py"` create a new class `"item()"` with 2 fields: "name", "done"
+    - when Django sees that we've created a new item class it will automatically create an "items" table when we make and run the database migrations
+    - by itself this class won't do anything we need to use "__class inheritance__" to give it some functionality
+- use `"models.Model"` as argument in `"item()"` class to inherit the base model class to be able to start our own model with all of that base functionality
+- define the attributes that our individual items will have: "name", "done"
+    - we can skip the "Id" field since Django will create that for us automatically
+    - `"null=False"` - prevents items from being created without a name programmatically
+    - `"blank=False"` - makes the field required on forms
+    - `"default=False"` - to make sure that to-do items are marked as not done by default
+
+### Create the table in database
+- make migrations "--dry-run" `"python3 manage.py makemigrations --dry-run"` - to see what it's going to do
+- make migrations `"python3 manage.py makemigrations"` - to create model "item"
+    - Django sees that we've added a new model to our app so it creates a new Python file in the migrations folder. That contains the code to create that database table based on our model. So this code will be converted to sequel by Django and executed on the database when we actually run the migrations
+- use the `"python3 manage.py showmigrations"` command to see that we do in fact have an unapplied migration on our to-do app now
+- run `"python3 manage.py migrate --plan"` to check not to do anything unintentional
+- run `"python3 manage.py migrate"` to apply the migration on our to-do app
+
+### Register the model
+In order to be able to see our models in the admin panel on the server, we first need to expose them in `"admin.py"`
+- import the "Item" model from ".models"
+- use the `"admin.site.register()"` function to actually register our "Item" model
+
+### Create a new item
+- run the server: `"python3 manage.py runserver"`
+- add __"/admin/"__ to the url
+- click "items"
+- click "add item" to add a new item
+- add 2 items in our todo list
+
+### Modify `"todo/models.py"` to allow the Item Names to be visible in the admin panel
+The item object value in the admin is actually coming from the fact that the base Django model class was inherited when the item model was created.
+By default all models that inherit the base model class will use its built-in string method to display their "class name" followed by the word "object" just so that there's a generic way to display them.
+
+To change that we need to actually override that string method with our own.
+And we can do that just by redefining it into our own class.
+
+- create a new "`__str__()`" dunder method
+- run the server: `"python3 manage.py runserver"`
+- add __"/admin/"__ to the url to check the new items names
 
 ---
 
