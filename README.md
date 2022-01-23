@@ -207,4 +207,25 @@ Generally, with crud, you'll want different templates for different operations.
 
 ---
 
+## Modifying Data
+
+### Using forms
+
+Creating forms manually leaves our application open to errors if we don't validate them properly. To alleviate this issue. In Django it's possible to create forms directly from the model itself. And allow Django to handle all the form validation.
+
+- create a new file in the `"todo"` app directory called `"forms.py"`
+- import forms from django
+- import Item model from .models
+- create a new class ItemForm() that inherits all the functionality of forms.ModelForm
+- create an inner class called meta to tell the form which model it's going to be associated with
+- in `"views.py"` import "ItemForm" from ".forms" 
+- create an instance of it in "add_item" view
+- create a "context" which contains the empty form
+- return the "context" to the template
+- in `"add_item"` template replace the form content with `{{ form }}` template variable
+- in `"add_item"` view replace the name and done fields, and Item.objects.create
+- in `"add_item"` template adjust the styling of the form to vertical styling: `"{{ form.as_p }}"`
+
+---
+
 *Disclaimer: this is a code along project from [Code Institute's](https://codeinstitute.net/) **Hello Django** module*
