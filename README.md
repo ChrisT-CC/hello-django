@@ -226,6 +226,17 @@ Creating forms manually leaves our application open to errors if we don't valida
 - in `"add_item"` view replace the name and done fields, and Item.objects.create
 - in `"add_item"` template adjust the styling of the form to vertical styling: `"{{ form.as_p }}"`
 
+### Editing an Item
+
+Now that our todo app has the ability to create items we'll give it the ability to edit existing items.
+
+- in `"todo_list"` template add an edit button to each table row
+- in `"views.py"` create a new view called `"edit_item"`
+- create a new template called `"edit_item.html"`
+- in `"urls.py"` create a new path which will point to `"edit/<item_id>"`
+- in `"edit_item"` view get a copy of the "item" from the database by using a built in django shortcut called `"get_object_or_404()"`
+- write a "POST" handler in the `"edit_item"` view
+
 ---
 
 *Disclaimer: this is a code along project from [Code Institute's](https://codeinstitute.net/) **Hello Django** module*
