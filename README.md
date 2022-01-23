@@ -52,6 +52,10 @@ Rather than build your own you could use a Django app. And simply install it int
 - in `"views.py"`, define a simple python function: `"say_hello()"`
 - in `"urls.py"`, import `"say_hello()"` function
 - define the url that's actually going to trigger the say hello function and return the http response to the browser: add `"path('hello/', say_hello, name='hello')"` to `"urlpatterns"`
+    - the built-in path function typically takes three arguments:
+        - 1st arg is the url that the user is going to type in: `"hello/"`
+        - 2nd arg is the view function that it's going to return: `"say_hello()"`
+        - 3rd arg is a name parameter: `"hello"`
 - run server to see results: `python3 manage.py runserver`
 - manually add `"/hello"` to the url in the address bar to see the results
 
@@ -172,6 +176,34 @@ Now that we’ve saved our models data, we need to be able to render this data o
 - adjust items key to use a "for-loop" to create a "table" showing "item.name" and "item.done"
 - update the "for-loop" add "if/else" statement to strike out an item if it's been done
 - add an "empty" tag to handle what should happen if our database doesn't have any todo items in it
+
+---
+
+## Creating a new item
+
+Now that we can render data from a Django database in a front-end HTML template, we're going to add the "Create" functionality, so that the users of our **todo_list** app to be able to interact with that data (to create their own todo items or mark them as complete).
+
+Generally, with crud, you'll want different templates for different operations.
+
+- create `"add_item.html"` template in `"templates/todo"` folder
+- add a link to the new template in `"todo_list.html"`
+- create a view in `"views.py"` to display the new template
+- define the url for the new template in `"urls.py"`
+- import the new `"add_item"` view to make it accessible to `"urls.py"`
+
+- edit the `"add_item.html"` template to create a form for the user to enter a name for a todo item
+- add a special template tag `"{% csrf_token %}"` to the form
+
+- add "POST" functionality to the submit button by using an "if" statement in `"views.py"`
+- run the server and add 2 items one done and on not to to check functionality
+
+*__Important__*
+
+- GET requests gets information from the server
+- POST requests sends or posts information to the server
+- to use POST request we need to add a special template tag `"{% csrf_token %}"` (cross-site request forgery token) to the form as a security measure
+    - this token is a randomly generated unique value which will be added to the form as a hidden input field when the form is submitted. 
+    - and works to guarantee that the data we're posting is actually coming from our todo list app and not from another website.
 
 ---
 
