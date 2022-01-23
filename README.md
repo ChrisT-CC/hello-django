@@ -81,6 +81,7 @@ Rather than build your own you could use a Django app. And simply install it int
 Migrations are Django's way of converting Python code into database operations i.e. they allow us to store our data in the database on the backend.
 
 ### Step 1: Make migrations
+
 - `"python3 manage.py makemigrations --dry-run"` - runs a test migration run
 - `"python3 manage.py showmigrations"`- shows some built-in Django apps like authentication and the Django admin and a couple of others that already have some migrations that need to be applied
     -  applying these migrations we'll set up the database and allow us to create an admin user that we can use to manage it
@@ -106,6 +107,7 @@ One of the most powerful parts of Django is the *__automatic admin interface__*.
 A Django model is the built-in feature that Django uses to create tables, their fields, and various constraints. Django models simplify tasks and organize tables into models. Django models are used to store data in the database conveniently.
 
 ### Create a class
+
 - in `"todo/models.py"` create a new class `"item()"` with 2 fields: "name", "done"
     - when Django sees that we've created a new item class it will automatically create an "items" table when we make and run the database migrations
     - by itself this class won't do anything we need to use "__class inheritance__" to give it some functionality
@@ -117,6 +119,7 @@ A Django model is the built-in feature that Django uses to create tables, their 
     - `"default=False"` - to make sure that to-do items are marked as not done by default
 
 ### Create the table in database
+
 - make migrations "--dry-run" `"python3 manage.py makemigrations --dry-run"` - to see what it's going to do
 - make migrations `"python3 manage.py makemigrations"` - to create model "item"
     - Django sees that we've added a new model to our app so it creates a new Python file in the migrations folder. That contains the code to create that database table based on our model. So this code will be converted to sequel by Django and executed on the database when we actually run the migrations
@@ -125,27 +128,50 @@ A Django model is the built-in feature that Django uses to create tables, their 
 - run `"python3 manage.py migrate"` to apply the migration on our to-do app
 
 ### Register the model
+
 In order to be able to see our models in the admin panel on the server, we first need to expose them in `"admin.py"`
 - import the "Item" model from ".models"
 - use the `"admin.site.register()"` function to actually register our "Item" model
 
 ### Create a new item
+
 - run the server: `"python3 manage.py runserver"`
 - add __"/admin/"__ to the url
 - click "items"
 - click "add item" to add a new item
 - add 2 items in our todo list
 
-### Modify `"todo/models.py"` to allow the Item Names to be visible in the admin panel
+### Better visibility in the admin panel
+
 The item object value in the admin is actually coming from the fact that the base Django model class was inherited when the item model was created.
 By default all models that inherit the base model class will use its built-in string method to display their "class name" followed by the word "object" just so that there's a generic way to display them.
 
 To change that we need to actually override that string method with our own.
 And we can do that just by redefining it into our own class.
 
-- create a new "`__str__()`" dunder method
-- run the server: `"python3 manage.py runserver"`
-- add __"/admin/"__ to the url to check the new items names
+- create a new "`__str__()`" dunder method in `"todo/models.py"`
+- run the server to view changes
+
+---
+
+## Rendering data
+
+Now that we’ve saved our models data, we need to be able to render this data on our HTML templates for the users to be able to see.
+
+### Adding an item key
+
+- import the "Item" model from ".models" in `"todo/views.py"` to be able to use "item" model in the views
+- modify `"get_todo_list()"` function to get a query set of all the items in the database in "items" variable
+- create a variable "context" which is going to be a dictionary with all items in it
+- add the "context" variable as a third argument to the render function to have access to it in the `"todo_list.html"` template
+
+### Edit the `"todo_list.html"` template
+
+- add a template variable `"{{ items }}"` to render the items key from the "context" dictionary
+    - Anything that you return to the template in a dictionary can be rendered in the same way. That includes almost anything that you can use in Python. Meaning you can return strings, numbers, lists, other dictionaries, or even functions and classes.
+- adjust items key to use a "for-loop" to create a "table" showing "item.name" and "item.done"
+- update the "for-loop" add "if/else" statement to strike out an item if it's been done
+- add an "empty" tag to handle what should happen if our database doesn't have any todo items in it
 
 ---
 
