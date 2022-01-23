@@ -76,4 +76,29 @@ Rather than build your own you could use a Django app. And simply install it int
 
 ---
 
+## Migrations and Admin
+
+Migrations are Django's way of converting Python code into database operations i.e. they allow us to store our data in the database on the backend.
+
+### Step 1: Make migrations
+- `"python3 manage.py makemigrations --dry-run"` - runs a test migration run
+- `"python3 manage.py showmigrations"`- shows some built-in Django apps like authentication and the Django admin and a couple of others that already have some migrations that need to be applied
+    -  applying these migrations we'll set up the database and allow us to create an admin user that we can use to manage it
+- `"python3 manage.py migrate --plan"` - we use the plan flag in order to see what it's going to do
+    - it shows us the initial migrations that are going to take care of some basic requirements like setting up the users groups and permissions tables. And altering the fields on some of those tables.
+- `"python3 manage.py migrate"` - takes care of theinitial setup
+
+### Step 2: Create Superuser
+
+A django superuser is the most powerful user with permissions to create, read, update and delete data in the Django admin, which includes model records and other users. A superuser is also able to login to the admin site.
+
+One of the most powerful parts of Django is the *__automatic admin interface__*. It reads metadata from your models to provide a quick, model-centric interface where trusted users can manage content on your site. The admin’s recommended use is limited to an organization’s internal management tool. It’s not intended for building your entire front end around.
+- `"python3 manage.py createsuperuser"` - creates a Super User
+- create username and password
+- `"python3 manage.py runserver"` - run the server
+- add __"/admin/"__ to the url
+- __"login"__ to see the authentication and authorization app that's been created and the two tables users and group that have been created inside that app
+
+---
+
 *Disclaimer: this is a code along project from [Code Institute's](https://codeinstitute.net/) **Hello Django** module*
