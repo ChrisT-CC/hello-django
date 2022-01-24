@@ -262,7 +262,7 @@ Now that our todo app has the ability to create items we'll give it the ability 
 Django has a testing framework available that can be used to create automated tests. 
 
 - rename the "test" file to `"test_forms.py"`
-- import "TestCase" form "django.test" and ItemForm from .forms
+- import "TestCase" form "django.test" and "ItemForm" from ".forms"
 - create a class `TestItemForm(TestCase):` that inherits "Testcase" and contain all the tests for this form
 - create first test to check that item name is required: `test_item_name_is_required`
     - create a form instance with an empty name field stored in "form" variable
@@ -282,6 +282,48 @@ Django has a testing framework available that can be used to create automated te
 - run a specific test e.g. form tests: `python3 manage.py test todo.test_forms`
 - run a specific class of tests: `python3 manage.py test todo.test_forms.TestItemForm`
 - run an individual test: `python3 manage.py test todo.test_forms.TestItemForm.test_fields_are_explicit_in_form_metaclass`
+
+---
+
+## Testing views in Django
+
+Testing objectives:
+- check that the views return a successful HTTP response 
+- check that they're using the proper templates
+- check what they can do: adding, toggling and deleting items
+
+Creating the tests
+- create the "test" file `"test_views.py"`
+- import "TestCase" form "django.test" and "Item" from ".models"
+- create a class `TestViews(TestCase):` that inherits "Testcase" and contain all the tests for this form
+1. test that we can get the "todo_list" which is the home page
+    - save the homepage instance as response
+    - check that the response code is 200 (success)
+    - check that the template used is `"todo/todo_list.html"`
+1. test that we can get the "add_item" page
+    - save the "add" instance as response
+    - check that the response code is 200 (success)
+    - check that the template used is `"todo/add_item.html"`
+1. test that we can get the "edit_item" page
+    - create an Item Object
+    - save the response for that item
+    - assert this item response code is 200
+    - assert the template used is "edit_item.html"
+1. test that we can add an item using the "add_item" view
+    - create a new item
+    - check it redirects to the home page
+1. test that we can delete an item using the "delete_item" view
+    - create a new item object instance
+    - delete this item
+    - assert that it redirects to the home page
+    - try to return the item from the database using filter and the item_id
+    - check the length of existing_items = 0
+1. test we can toggle an item using the "toggle_item" view
+    - create a new item object instance with done=True
+    - toggle this item so done=False
+    - assert that it redirects to the home page
+    - get the item again and save as updated_item
+    - check the done status is False
 
 ---
 
