@@ -340,4 +340,41 @@ In general, we don't want to test internal Django code because it's already been
 
 ---
 
+## Coverage
+
+Coverage is a tool that checks what percentage of the code is actually tested
+
+- install the Coverage tool: `pip3 install coverage`
+- run Coverage: `coverage run --source=todo manage.py test` - this generates the `.coverage` file
+- view Coverage Report: `coverage report` 
+- this report shows what percentage of the code is actually tested
+- to see specifically what we're missing, Coverage allows us to create an interactive HTML report: `coverage html` - this creates the `htmlcov` folder
+- view HTML Report: `python3 -m http.server`
+- open the `.htmlcov` folder in the html directory
+- the Coverage report shows that the application is not fully tested
+    - in `models.py` we haven’t tested the string method of the item model
+
+### Create the missing tests
+
+1. in `models.py` test the "string" method of the item model
+    - create a new item instance
+    - assert the item's string is "Test Todo Item"
+    - rerun Coverage
+    - regenerate HTML Report
+1. in `views.py` test the "POST" method
+    - create a new item instance
+    - edit the item using "POST" to "Updated Name"
+    - check it redirects to home
+    - save the edited item as updated_item
+    - check this edited item equals "Updated Name"
+    - rerun Coverage
+    - regenerate HTML Report
+
+*__Important__*
+- the 100% coverage showed in the Coverage report does not mean that 100% of the tests pass, only that the code was tested 100%.
+- run each test as it's written to reduce the chances of making an error
+- if any tests fail, check the Error Messages
+
+---
+
 *Disclaimer: this is a code along project from [Code Institute's](https://codeinstitute.net/) **Hello Django** module*
