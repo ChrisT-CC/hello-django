@@ -257,4 +257,32 @@ Now that our todo app has the ability to create items we'll give it the ability 
 
 ---
 
+## Testing forms in Django
+
+Django has a testing framework available that can be used to create automated tests. 
+
+- rename the "test" file to `"test_forms.py"`
+- import "TestCase" form "django.test" and ItemForm from .forms
+- create a class `TestItemForm(TestCase):` that inherits "Testcase" and contain all the tests for this form
+- create first test to check that item name is required: `test_item_name_is_required`
+    - create a form instance with an empty name field stored in "form" variable
+    - check that this field is not valid
+    - check that there is a "name" key in the dictionary of form errors
+    - check whether the error message on the name key is "This field is required."
+- create a second test to ensure the done field is not required: `test_done_field_is_not_required`
+    - create a form instance with a name field of "Test Todo Items"
+    - check that this instance is valid (even without selecting a "done" status)
+- create a third test to ensure that the only fields that are displayed in the form are the "name" and "done" fields: `test_fields_are_explicit_in_form_metaclass`
+    - create an empty form instance
+    - check that the meta fields are equal to "name" and "done"
+
+### Running tests
+
+- run all tests: `python3 manage.py test`
+- run a specific test e.g. form tests: `python3 manage.py test todo.test_forms`
+- run a specific class of tests: `python3 manage.py test todo.test_forms.TestItemForm`
+- run an individual test: `python3 manage.py test todo.test_forms.TestItemForm.test_fields_are_explicit_in_form_metaclass`
+
+---
+
 *Disclaimer: this is a code along project from [Code Institute's](https://codeinstitute.net/) **Hello Django** module*
