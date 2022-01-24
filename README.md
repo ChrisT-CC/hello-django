@@ -248,4 +248,13 @@ Now that our todo app has the ability to create items we'll give it the ability 
 
 ---
 
+## Deleting an Item
+
+- add a "delete" link in `"delete_list"` template
+- add a new path "delete" in `"urls.py"` file and modify import views
+- create a new view `"delete_item"`
+- run server and check functionality
+
+---
+
 *Disclaimer: this is a code along project from [Code Institute's](https://codeinstitute.net/) **Hello Django** module*
