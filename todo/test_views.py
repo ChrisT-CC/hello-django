@@ -1,4 +1,4 @@
-""" testing views """
+""" views testing """
 from django.test import TestCase
 from .models import Item
 
@@ -7,7 +7,7 @@ from .models import Item
 
 class TestViews(TestCase):
     """
-    check that the views return a successful HTTP response 
+    check that the views return a successful HTTP response
     check that they're using the proper templates
     check what they can do: adding, toggling and deleting items
     """

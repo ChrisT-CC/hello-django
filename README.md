@@ -264,15 +264,15 @@ Django has a testing framework available that can be used to create automated te
 - rename the "test" file to `"test_forms.py"`
 - import "TestCase" form "django.test" and "ItemForm" from ".forms"
 - create a class `TestItemForm(TestCase):` that inherits "Testcase" and contain all the tests for this form
-- create first test to check that item name is required: `test_item_name_is_required`
+1. test to check that item name is required: `test_item_name_is_required`
     - create a form instance with an empty name field stored in "form" variable
     - check that this field is not valid
     - check that there is a "name" key in the dictionary of form errors
     - check whether the error message on the name key is "This field is required."
-- create a second test to ensure the done field is not required: `test_done_field_is_not_required`
+1. test to ensure the done field is not required: `test_done_field_is_not_required`
     - create a form instance with a name field of "Test Todo Items"
     - check that this instance is valid (even without selecting a "done" status)
-- create a third test to ensure that the only fields that are displayed in the form are the "name" and "done" fields: `test_fields_are_explicit_in_form_metaclass`
+1. test to ensure that the only fields that are displayed in the form are the "name" and "done" fields: `test_fields_are_explicit_in_form_metaclass`
     - create an empty form instance
     - check that the meta fields are equal to "name" and "done"
 
@@ -287,15 +287,15 @@ Django has a testing framework available that can be used to create automated te
 
 ## Testing views in Django
 
-Testing objectives:
+### Testing objectives:
 - check that the views return a successful HTTP response 
 - check that they're using the proper templates
 - check what they can do: adding, toggling and deleting items
 
-Creating the tests
+### Creating the tests
 - create the "test" file `"test_views.py"`
 - import "TestCase" form "django.test" and "Item" from ".models"
-- create a class `TestViews(TestCase):` that inherits "Testcase" and contain all the tests for this form
+- create a class `TestViews(TestCase):` that inherits "Testcase" and contain all the tests for the views
 1. test that we can get the "todo_list" which is the home page
     - save the homepage instance as response
     - check that the response code is 200 (success)
@@ -324,6 +324,19 @@ Creating the tests
     - assert that it redirects to the home page
     - get the item again and save as updated_item
     - check the done status is False
+
+---
+
+## Testing models
+
+In general, we don't want to test internal Django code because it's already been tested by the Django developers themselves. But we can test that the todo items will be created by default with the done status of false.
+
+- create the "test" file `"test_models.py"`
+- import "TestCase" form "django.test" and "Item" from ".models"
+- create a class `TestModels(TestCase):` that inherits "Testcase" and contain all the tests for the model
+1. test that the todo items will be created by default with the done status of false
+    - create a new item instance
+    - check that item.done is False
 
 ---
 
