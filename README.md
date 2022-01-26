@@ -377,4 +377,118 @@ Coverage is a tool that checks what percentage of the code is actually tested
 
 ---
 
+## Deployment
+
+### Heroku Setup and CLI
+
+Unfortunately, deploying to GitHub Pages won't work, since it can only handle front-end files such as HTML, CSS, and JavaScript. So the project needs to be deployed to a hosting platform that can render Python files. One such platform is [Heroku](https://id.heroku.com/login).
+
+- sign up / login to [Heroku](https://id.heroku.com/login) website
+- if necessary, install the heroku CLI in Gitpod: `curl https://cli-assets.heroku.com/install.sh | sh`
+- login to Heroku CLI: `heroku login -i`
+
+### Installing Project Requirements
+
+Because Heroku uses an ephemeral file system, we can't use the local `db.sqlite3` database. We use instead a database called Postgres.
+
+- install Postgres: `pip3 install psycopg2-binary`
+- install webserver: `pip3 install gunicorn` - replaces the development server once the app is deployed to Heroku
+- create a requirements file: `pip3 freeze --local > requirements.txt` - creates a file to let heroku know which packages to install
+
+### Creating an Heroku App
+
+- create the app in CLI: `heroku apps:create app-name --region eu`
+- view theapps in CLI: `heroku apps`
+- view the key remotes in CLI: `git remote -v`
+
+### Creating a New Database on Heroku
+
+The database is created on heroku website.
+
+- in heroku app under the "Resources" tab, underneath the "Add-ons" section type `heroku postgress`
+- choose `Hobby Dev - Free` option
+- in "Settings" press "Reveal Config Vars" to see see that Heroku has created a DATABASE_URL for us to connect to from inside Django
+- to see it in CLI type: "heroku addons"
+
+*__Important__*
+
+If you want to create this database with MySql instead of Postgres use DB add-on.
+
+### Connecting to Our Remote Database
+
+Set up the Django app to connect to the remote database.
+
+- install a database url package: `pip3 install dj-database-url` - this package allows us to parse the database url that Heroku created
+- refreeze the requirements file: `pip3 freeze --local > requirements.txt`
+- get the url of the remote database in CLI: `heroku config -a app-name`
+- in `settings.py` modify the original "DATABASE" settings to replace the value of the default database with the database url from Heroku
+- import "dj_database_url"
+- run migrations: `python3 manage.py migrate`
+- update `.gitignore`
+- add, commit and push
+
+### Attempting a First Deployment
+
+- deploy app to Heroku: `git push heroku main`
+- if heroku repository is not find:
+    - run `heroku git:remote -a app-name`
+    - check remote repositories: `git remote -v`
+    - redeploy the app to Heroku: `git push heroku main`
+- open app - gives a "pre-receive hook declined" error caused by the fact that we don't have static files in the project
+- to fix (pre-receive hook declined) disable Collect Static: `heroku config:set DISABLE_COLLECTSTATIC=1`
+- redeploy the app to Heroku: `git push heroku main` - the app is pushed to heroku, but gives an error when trying to open it
+- check the logs for errors: `heroku logs --tail`
+- create a new file: `Procfile` and add `web: gunicorn django_todo.wsgi:application` to it - this tells gunicorn to run using our projects wsgi module
+- add, commit and push
+- open app - gives a "DisallowedHost" error
+- to fix error, in `settings.py` add the host name of our Heroku app to `ALLOWED_HOSTS`
+- add, commit and push
+
+### Connecting Heroku to Github
+
+By connecting Heroku to Github the application will automatically deploy the latest code to Heroku.
+
+- in heroku app, open app, in "Deploy" tab, under the "Deployment method" setting select "GitHub"
+- search for repository and click "Connect"
+- choose "Enable Automatic Deploys"
+- modify `settings.py` to use environment variables:
+    - import os
+    - get the Secret Key value using an environment variable
+    - replace the Heroku host value in ALLOWED_HOSTS
+    - replace the Database URL value in DATABASES
+- add the environment variables to Heroku:
+    - in heroku app, open app, in "Settings" tab press "Reveal Config Vars"
+    - add new variable "HEROKU_HOSTNAME"
+- confirm Heroku to Github connection:
+    - update the titles of each template file
+    - add, commit and push
+    - refresh and check app
+
+### The Development Environment
+
+We need to set up a local development environment so that we don't have to change any settings to run our project in gitpod.
+
+- modify `settings.py`:
+    - create a new "development" variable
+    - set "Debug" to development
+    - modify the "DATABASES" configuration and add an if statement
+- add a new environment variable set to TRUE
+- restart workspace
+- run server - the server starts, but we get a "DisallowedHost" error
+- modify `settings.py` to fix it 
+    - add a "localhost" as an ALLOWED_HOST if development = True
+    - else use the HEROKU_HOSTNAME environment variable
+- add, commit and push
+
+### The SECRET_KEY
+
+- in `settings.py` replace the default SECRET KEY with a blank string
+- generate and copy a new Django Secret Key
+- add a new environment variable
+- restart the workspace
+- create a Secret Key for Heroku
+- add, commit and push
+
+---
+
 *Disclaimer: this is a code along project from [Code Institute's](https://codeinstitute.net/) **Hello Django** module*
